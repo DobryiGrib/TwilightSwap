@@ -93,7 +93,7 @@ contract Pool is ERC20, ReentrancyGuard {
 
         return liquidity;
     }
-
+    
     function burn(address to) external nonReentrant returns (uint amount0, uint amount1) {
         uint256 liquidity = balanceOf(address(this));
         require(liquidity > 0, "NO_LIQUIDITY");
