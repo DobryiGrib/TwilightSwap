@@ -70,19 +70,23 @@ contract Router {
         (uint112 reserve0, uint112 reserve1, ) = IPool(pair).getReserves();
         (address token0, ) = _sortTokens(tokenA, tokenB);
         
+        // присваиваем токены A&B по порядку
         (uint256 reserveA, uint256 reserveB) = tokenA == token0 
             ? (uint256(reserve0), uint256(reserve1)) 
             : (uint256(reserve1), uint256(reserve0));
 
-        // 3. Та самая логика пропорций, которую мы разбирали подробно
+        // первое условие, если пары нет то ты устанавливаешь цену, какую пропорцию внес такая и цена
         if (reserveA == 0 && reserveB == 0) {
             (amountA, amountB) = (amountADesired, amountBDesired);
         } else {
+            // если пара уже есть, заставляем соблюдать пропорцию чтобы цена не улетела
             uint256 amountBOptimal = _quote(amountADesired, reserveA, reserveB);
+            // если нужное количество токена B хватает то забираем все желаемые токены A и нужную пропорцию токена B
             if (amountBOptimal <= amountBDesired) {
                 require(amountBOptimal >= amountBMin, "INSUFFICIENT_B_AMOUNT");
                 (amountA, amountB) = (amountADesired, amountBOptimal);
             } else {
+                // если нужного количества токена B не хватает, берем все токены B и вычисляем сколько токенов A нужно для пропорции
                 uint256 amountAOptimal = _quote(amountBDesired, reserveB, reserveA);
                 assert(amountAOptimal <= amountADesired);
                 require(amountAOptimal >= amountAMin, "INSUFFICIENT_A_AMOUNT");
@@ -221,31 +225,30 @@ contract Router {
         uint256 amountBMin,
         address to,
         uint256 deadline
-    ) external returns (uint256 amountA, uint256 amountB, uint256 liquidity)
-    {
-       // 1. Проверка времени
-    require(block.timestamp <= deadline, "EXPIRED");
+    ) external returns (uint256 amountA, uint256 amountB, uint256 liquidity){
+        require(block.timestamp <= deadline, "EXPIRED");
 
-    // 2. Вызываем наш "калькулятор", который сделает всю грязную работу
-    // Он и пару создаст, и резервы проверит, и пропорции высчитает
-    (amountA, amountB) = _calculateLiquidity(
-        tokenA,
-        tokenB,
-        amountADesired,
-        amountBDesired,
-        amountAMin,
-        amountBMin
-    );
+        // 2. Вызываем наш "калькулятор", который сделает всю грязную работу
+        // Он и пару создаст, и резервы проверит, и пропорции высчитает
+        (amountA, amountB) = _calculateLiquidity(
+            tokenA,
+            tokenB,
+            amountADesired,
+            amountBDesired,
+            amountAMin,
+            amountBMin
+        );
 
-    // 3. Получаем адрес пары (теперь мы уверены, что она существует)
-    address pair = factory.getPair(tokenA, tokenB);
+        // 3. Получаем адрес пары (теперь мы уверены, что она существует)
+        // _calaulateLiquidity создаст нам пару если его нет
+        address pair = factory.getPair(tokenA, tokenB);
 
-    // 4. Переводим токены в Пул
-    IERC20(tokenA).safeTransferFrom(msg.sender, pair, amountA);
-    IERC20(tokenB).safeTransferFrom(msg.sender, pair, amountB);
+        // 4. Переводим токены в Пул
+        IERC20(tokenA).safeTransferFrom(msg.sender, pair, amountA);
+        IERC20(tokenB).safeTransferFrom(msg.sender, pair, amountB);
 
-    // 5. Минтим LP-токены пользователю
-    liquidity = IPool(pair).mint(to);
+        // 5. Минтим LP-токены пользователю
+        liquidity = IPool(pair).mint(to);
     }
 
     function swapExactTokensForTokens(
@@ -280,7 +283,7 @@ contract Router {
         uint256 amountBMin,   // Минимум Токена Б, который хочешь получить
         address to,           // Кому отправить токены
         uint256 deadline      // Срок годности транзакции
-    ) external returns (uint256 amountA, uint256 amountB) {
+    ) public returns (uint256 amountA, uint256 amountB) {
         // 0. Проверка дедлайна
         require(block.timestamp <= deadline, "EXPIRED");
 
@@ -308,7 +311,6 @@ contract Router {
         require(amountA >= amountAMin, "INSUFFICIENT_A_AMOUNT");
         require(amountB >= amountBMin, "INSUFFICIENT_B_AMOUNT");
     }
-    
 
      function addLiquidityETH(
         address token, // часть пары, например USDC
@@ -361,7 +363,7 @@ contract Router {
         uint256 amountETHMin, // минимум ETH которых мы хотим получить
         address to, // куда переводить токены
         uint256 deadline // дедлайн, срок годность транзакции
-    ) external returns (uint256 amountToken, uint256 amountETH) {
+    ) public returns (uint256 amountToken, uint256 amountETH) {
         require(block.timestamp <= deadline, "EXPIRED");
 
         // 1. Сначала делаем стандартный забор ликвидности, 

@@ -38,19 +38,18 @@ contract Pool is ERC20, ReentrancyGuard {
     
 
     function sqrt(uint y) internal pure returns (uint z) {
-    if (y > 3) {
+     if (y > 3) {
         z = y;
         uint x = y / 2 + 1;
         while (x < z) {
             z = x;
             x = (y / x + x) / 2;
         }
-    } else if (y != 0) {
+     } else if (y != 0) {
         z = 1;
+     }
+     return z;
     }
-    return z;
-    }
-
 
     function getReserves() public view returns (uint112, uint112, uint32){
          return (reserve0, reserve1, blockTimestampLast);
@@ -66,18 +65,25 @@ contract Pool is ERC20, ReentrancyGuard {
     }
 
     function mint(address to) external returns (uint256 liquidity) {
+
+       // получаем новые балансы в реальном времени
       uint256 balance0 = IERC20(token0).balanceOf(address(this));
       uint256 balance1 = IERC20(token1).balanceOf(address(this));
+
       require(balance0 >= reserve0 && balance1 >= reserve1, "INSUFFICIENT_BALANCE");
+
+     // вычитываем разницу, сколько мы реально внесли: новый баланс - старый баланс = то что мы внесли
       uint256 amount0 = balance0 - reserve0;
       uint256 amount1 = balance1 - reserve1;
+
+     // общая эмиссия всех LP токенов
       uint256 _totalSupply = totalSupply();
       require(amount0 > 0 && amount1 > 0, "INSUFFICIENT_INPUT");
 
      if(_totalSupply == 0){
       liquidity = sqrt(amount0 * amount1);
        require(liquidity > MINIMUM_LIQUIDITY, "MINIMUM_LIQUIDITY");
-    // Первые 1000 LP сжигать (как в Uniswap)
+     // Первые 1000 LP сжигать (как в Uniswap)
         _mint(BURN_ADDR, MINIMUM_LIQUIDITY); 
         liquidity -= MINIMUM_LIQUIDITY;
      }else{
@@ -126,7 +132,7 @@ contract Pool is ERC20, ReentrancyGuard {
         require(amount0Out > 0 || amount1Out > 0, "Uncorrect swap balance");
         require(amount0Out < _reserve0, "reserve must be bigger than amount out");
         require(amount1Out < _reserve1, "reserve must be bigger than amount out");
-        require(to != address(0) && to != address(this), "inccorect address");
+        require(to != address(0) && to != address(this), "incorrect address");
         require(to != token0 && to != token1, "to can't be token0 or token1 in swap");
        if (amount0Out > 0) IERC20(token0).safeTransfer(to, amount0Out);
        if (amount1Out > 0) IERC20(token1).safeTransfer(to, amount1Out);
@@ -135,12 +141,13 @@ contract Pool is ERC20, ReentrancyGuard {
         balance0 = IERC20(token0).balanceOf(address(this));
         balance1 = IERC20(token1).balanceOf(address(this));
 
-        // calculate the input amounts
 
+        // calculate the input amounts
         amount0In = balance0 > (_reserve0 - amount0Out) ? balance0 - (_reserve0 - amount0Out) : 0;
         amount1In = balance1 > (_reserve1 - amount1Out) ? balance1 - (_reserve1 - amount1Out) : 0;
         require(amount1In > 0 || amount0In > 0, "user must pay at least something");
 
+        // math x * y = k
         uint256 balance0Adjusted = balance0 * FEE_DEN - amount0In * FEE_NUM;
         uint256 balance1Adjusted = balance1 * FEE_DEN - amount1In * FEE_NUM;
         require(balance0Adjusted * balance1Adjusted >= _reserve0 * _reserve1 * FEE_DEN * FEE_DEN, "K");

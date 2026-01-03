@@ -6,7 +6,7 @@ import "./Pool.sol";
 
 contract Factory is Ownable{
 
-    constructor() {}
+    constructor() Ownable(msg.sender) {}
    event PairCreated(address indexed token0, address indexed token1, address pair, uint);
 
     mapping (address => mapping(address => address)) public getPair;
