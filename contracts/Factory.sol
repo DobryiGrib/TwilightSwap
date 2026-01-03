@@ -23,10 +23,8 @@ contract Factory is Ownable{
     }
 
     function createPair(address tokenA, address tokenB) public returns (address pair) {
-        address token0;
-        address token1;
-        require(getPair[tokenA][tokenB] == address(0), "PAIR_EXISTS");
-        (token0, token1) = sortTokens(tokenA, tokenB);
+        (address token0, address token1) = sortTokens(tokenA, tokenB);
+        require(getPair[token0][token1] == address(0), "PAIR_EXISTS");
         pair = address(new Pool(token0, token1));
         getPair[token0][token1] = pair;
         getPair[token1][token0] = pair;
