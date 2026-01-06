@@ -53,7 +53,17 @@ npx hardhat keystore set SEPOLIA_PRIVATE_KEY
 
 After setting the variable, you can run the deployment with the Sepolia network:
 
+
+
+Factory (Фабрика): 0xBdb9868f14423F176111C9A0248495AEF0378C6F
+
+WETH (Обернутый ETH): 0x9C6ec780E205e313e03568455d855FAD64A3B890
+
+Router (Роутер): 0x48aeCC41DAC470591dbc9eeb0Aeba9d69b5962A3 
+
+Test Token (TWLT): 0x403e8236228E62E2bEe444E3590817d3b05d7286
 ```shell
+
 npx hardhat ignition deploy --network sepolia ignition/modules/Counter.ts
 ```
 =======
