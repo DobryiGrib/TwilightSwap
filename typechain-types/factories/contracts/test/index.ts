@@ -2,3 +2,4 @@
 /* tslint:disable */
 /* eslint-disable */
 export { ERC20Mock__factory } from "./ERC20Mock__factory";
+export { WETH9__factory } from "./WETH9__factory";

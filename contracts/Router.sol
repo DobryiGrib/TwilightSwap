@@ -174,7 +174,6 @@ contract Router {
       amountOut = numerator / denominator;
     }
 
-
     function getAmountIn(uint256 amountOut, uint256 reserveIn, uint256 reserveOut)
      public pure returns (uint256 amountIn) {
         // 1. Проверки: нельзя купить больше, чем есть в пуле
@@ -256,7 +255,7 @@ contract Router {
         uint256 amountOutMin,
         address[] calldata path,
         address to,
-        uint256 deadline // Добавим дедлайн для безопасности, как мы обсуждали!
+        uint256 deadline // Добавим дедлайн для безопасности 
     ) external returns (uint256[] memory amounts) {
         // Проверка времени
         require(block.timestamp <= deadline, "EXPIRED");

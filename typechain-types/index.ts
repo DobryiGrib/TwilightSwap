@@ -42,3 +42,5 @@ export type { Router } from "./contracts/Router.sol/Router";
 export { Router__factory } from "./factories/contracts/Router.sol/Router__factory";
 export type { ERC20Mock } from "./contracts/test/ERC20Mock";
 export { ERC20Mock__factory } from "./factories/contracts/test/ERC20Mock__factory";
+export type { WETH9 } from "./contracts/test/WETH9";
+export { WETH9__factory } from "./factories/contracts/test/WETH9__factory";

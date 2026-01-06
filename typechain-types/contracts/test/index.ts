@@ -2,3 +2,4 @@
 /* tslint:disable */
 /* eslint-disable */
 export type { ERC20Mock } from "./ERC20Mock";
+export type { WETH9 } from "./WETH9";

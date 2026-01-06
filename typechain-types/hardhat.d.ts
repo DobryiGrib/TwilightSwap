@@ -85,6 +85,10 @@ declare module "hardhat/types/runtime" {
       name: "ERC20Mock",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ERC20Mock__factory>;
+    getContractFactory(
+      name: "WETH9",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.WETH9__factory>;
 
     getContractAt(
       name: "Ownable",
@@ -176,6 +180,11 @@ declare module "hardhat/types/runtime" {
       address: string | ethers.Addressable,
       signer?: ethers.Signer
     ): Promise<Contracts.ERC20Mock>;
+    getContractAt(
+      name: "WETH9",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.WETH9>;
 
     deployContract(
       name: "Ownable",
@@ -249,6 +258,10 @@ declare module "hardhat/types/runtime" {
       name: "ERC20Mock",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.ERC20Mock>;
+    deployContract(
+      name: "WETH9",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.WETH9>;
 
     deployContract(
       name: "Ownable",
@@ -340,6 +353,11 @@ declare module "hardhat/types/runtime" {
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.ERC20Mock>;
+    deployContract(
+      name: "WETH9",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.WETH9>;
 
     // default types
     getContractFactory(
