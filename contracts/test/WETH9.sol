@@ -15,7 +15,7 @@ contract WETH9 is ERC20 {
     function withdraw(uint256 amount) public {
         require(balanceOf(msg.sender) >= amount, "Insufficient WETH balance");
         _burn(msg.sender, amount);
-        payable(msg.sender).transfer(amount);
+        payable(msg.sender).call{value: amount}("");
     }
 
     // Позволяет просто отправлять ETH на контракт для получения WETH

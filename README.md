@@ -1,71 +1,66 @@
-<<<<<<< HEAD
-# Sample Hardhat 3 Beta Project (`mocha` and `ethers`)
+## Foundry
 
-This project showcases a Hardhat 3 Beta project using `mocha` for tests and the `ethers` library for Ethereum interactions.
+**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
 
-To learn more about the Hardhat 3 Beta, please visit the [Getting Started guide](https://hardhat.org/docs/getting-started#getting-started-with-hardhat-3). To share your feedback, join our [Hardhat 3 Beta](https://hardhat.org/hardhat3-beta-telegram-group) Telegram group or [open an issue](https://github.com/NomicFoundation/hardhat/issues/new) in our GitHub issue tracker.
+Foundry consists of:
 
-## Project Overview
+- **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
+- **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
+- **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
+- **Chisel**: Fast, utilitarian, and verbose solidity REPL.
 
-This example project includes:
+## Documentation
 
-- A simple Hardhat configuration file.
-- Foundry-compatible Solidity unit tests.
-- TypeScript integration tests using `mocha` and ethers.js
-- Examples demonstrating how to connect to different types of networks, including locally simulating OP mainnet.
+https://book.getfoundry.sh/
 
 ## Usage
 
-### Running Tests
-
-To run all the tests in the project, execute the following command:
+### Build
 
 ```shell
-npx hardhat test
+$ forge build
 ```
 
-You can also selectively run the Solidity or `mocha` tests:
+### Test
 
 ```shell
-npx hardhat test solidity
-npx hardhat test mocha
+$ forge test
 ```
 
-### Make a deployment to Sepolia
-
-This project includes an example Ignition module to deploy the contract. You can deploy this module to a locally simulated chain or to Sepolia.
-
-To run the deployment to a local chain:
+### Format
 
 ```shell
-npx hardhat ignition deploy ignition/modules/Counter.ts
+$ forge fmt
 ```
 
-To run the deployment to Sepolia, you need an account with funds to send the transaction. The provided Hardhat configuration includes a Configuration Variable called `SEPOLIA_PRIVATE_KEY`, which you can use to set the private key of the account you want to use.
-
-You can set the `SEPOLIA_PRIVATE_KEY` variable using the `hardhat-keystore` plugin or by setting it as an environment variable.
-
-To set the `SEPOLIA_PRIVATE_KEY` config variable using `hardhat-keystore`:
+### Gas Snapshots
 
 ```shell
-npx hardhat keystore set SEPOLIA_PRIVATE_KEY
+$ forge snapshot
 ```
 
-After setting the variable, you can run the deployment with the Sepolia network:
+### Anvil
 
-
-
-Factory (Фабрика): 0xBdb9868f14423F176111C9A0248495AEF0378C6F
-
-WETH (Обернутый ETH): 0x9C6ec780E205e313e03568455d855FAD64A3B890
-
-Router (Роутер): 0x48aeCC41DAC470591dbc9eeb0Aeba9d69b5962A3 
-
-Test Token (TWLT): 0x403e8236228E62E2bEe444E3590817d3b05d7286
 ```shell
-
-npx hardhat ignition deploy --network sepolia ignition/modules/Counter.ts
+$ anvil
 ```
-=======
-# DEX-Uniswap-V2-copy
->>>>>>> 16d39baf7bd4a3ede0049ea114441f6506796f49
+
+### Deploy
+
+```shell
+$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
+```
+
+### Cast
+
+```shell
+$ cast <subcommand>
+```
+
+### Help
+
+```shell
+$ forge --help
+$ anvil --help
+$ cast --help
+```
