@@ -37,7 +37,7 @@ contract Pool is ERC20, ReentrancyGuard {
     }   
     
 
-    function sqrt(uint y) internal pure returns (uint z) {
+    function sqrt(uint256 y) internal pure returns (uint256 z) {
      if (y > 3) {
         z = y;
         uint x = y / 2 + 1;
@@ -56,12 +56,12 @@ contract Pool is ERC20, ReentrancyGuard {
     }
 
      function _update(uint256 balance0, uint256 balance1) internal{
-            require(balance0 <= type(uint112).max, "overflow in _update");
-            require(balance1 <= type(uint112).max, "overflow in _update");
-            reserve0 = uint112(balance0);
-            reserve1 = uint112(balance1);
-            blockTimestampLast = uint32(block.timestamp);
-            emit Sync(reserve0, reserve1);
+        require(balance0 <= type(uint112).max, "overflow in _update");
+        require(balance1 <= type(uint112).max, "overflow in _update");
+        reserve0 = uint112(balance0);
+        reserve1 = uint112(balance1);
+        blockTimestampLast = uint32(block.timestamp);
+        emit Sync(reserve0, reserve1);
     }
 
     function mint(address to) external returns (uint256 liquidity) {
@@ -101,7 +101,7 @@ contract Pool is ERC20, ReentrancyGuard {
         return liquidity;
     }
     
-    function burn(address to) external nonReentrant returns (uint amount0, uint amount1) {
+    function burn(address to) external nonReentrant returns (uint256 amount0, uint256 amount1) {
         uint256 liquidity = balanceOf(address(this));
         require(liquidity > 0, "NO_LIQUIDITY");
         uint256 _totalSupply = totalSupply();

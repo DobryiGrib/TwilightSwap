@@ -171,6 +171,40 @@ contract RouterTest is Test {
         vm.stopPrank();
     }
 
+    // test fuzzing
+    function testFuzz_SwapAmount(uint256 amount) public {
+
+        // Это единственный чит-код, который мы оставим для логики
+        amount = bound(amount, 1, 10 ether); 
+
+        // 2. Добавляем ликвидность (база)
+        uint256 initialLiquidity = 100 ether;
+        token.approve(address(router), initialLiquidity);
+        router.addLiquidityETH{value: 10 ether}(
+            address(token), initialLiquidity, 0, 0, address(this), block.timestamp
+        );
+
+        // 3. Пытаемся сделать обмен на СЛУЧАЙНУЮ сумму amount
+        address[] memory path = new address[](2);
+        path[0] = address(weth);
+        path[1] = address(token);
+
+        // Даем юзеру ETH для обмена 
+        vm.deal(user, amount);
+
+        vm.prank(user);
+        // Если твоя математика обмена x*y=k верна, это должно работать для любого amount
+        router.swapExactETHForTokens{value: amount}(
+            0, 
+            path,
+            user,
+            block.timestamp
+        );
+
+        // 4. Проверка
+        assertGt(token.balanceOf(user), 0, "User should receive tokens");
+    }
+
 
 
 }
